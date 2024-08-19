@@ -48,7 +48,11 @@ internal final class PDFPageCollectionViewCell: UICollectionViewCell {
 }
 
 extension PDFPageCollectionViewCell: PDFPageViewDelegate {
-    func handleSingleTap(_ pdfPageView: PDFPageView) {
+    func handleSingleTap(_ pdfPageView: PDFPageView,tap: UITapGestureRecognizer,contentView: UIView) {
+        let size = contentView.bounds.size
+        let point = tap.location(in: contentView)
+        NotificationCenter.default.post(name: NSNotification.Name.init("didTapPDF"), object: nil, userInfo: ["point" : point,"pdfSize" : size,"pageIndex" : pageIndex])
+        
         pageCollectionViewCellDelegate?.handleSingleTap(self, pdfPageView: pdfPageView)
     }
 }

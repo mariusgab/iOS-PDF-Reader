@@ -11,7 +11,7 @@ import UIKit
 /// Delegate that is informed of important interaction events with the current `PDFPageView`
 protocol PDFPageViewDelegate: class {
     /// User has tapped on the page view
-    func handleSingleTap(_ pdfPageView: PDFPageView)
+    func handleSingleTap(_ pdfPageView: PDFPageView,tap: UITapGestureRecognizer,contentView: UIView)
 }
 
 /// An interactable page of a document
@@ -94,12 +94,12 @@ internal final class PDFPageView: UIScrollView {
         let doubleTapOne = UITapGestureRecognizer(target: self, action:#selector(handleDoubleTap))
         doubleTapOne.numberOfTapsRequired = 2
         doubleTapOne.cancelsTouchesInView = false
-        addGestureRecognizer(doubleTapOne)
+//        addGestureRecognizer(doubleTapOne)
         
         let singleTapOne = UITapGestureRecognizer(target: self, action:#selector(handleSingleTap))
         singleTapOne.numberOfTapsRequired = 1
         singleTapOne.cancelsTouchesInView = false
-        addGestureRecognizer(singleTapOne)
+//        addGestureRecognizer(singleTapOne)
         
         singleTapOne.require(toFail: doubleTapOne)
         
@@ -108,6 +108,11 @@ internal final class PDFPageView: UIScrollView {
         delegate = self
         autoresizesSubviews = true
         autoresizingMask = [.flexibleHeight, .flexibleWidth]
+        
+        contentView.addGestureRecognizer(singleTapOne)
+        
+        backgroundColor = UIColor.lightGray
+        contentView.backgroundColor = UIColor.lightGray
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -147,7 +152,7 @@ internal final class PDFPageView: UIScrollView {
     
     /// Notifies the delegate that a single tap was performed
     @objc func handleSingleTap(_ tapRecognizer: UITapGestureRecognizer) {
-        pageViewDelegate?.handleSingleTap(self)
+        pageViewDelegate?.handleSingleTap(self,tap: tapRecognizer, contentView: contentView)
     }
     
     /// Zooms in and out accordingly, based on the current zoom level

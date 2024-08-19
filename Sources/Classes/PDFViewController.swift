@@ -147,6 +147,8 @@ public final class PDFViewController: UIViewController {
         let thumbnailWidth = (numberOfPages * PDFThumbnailCell.cellSize.width) + totalSpacing
         let width = min(thumbnailWidth, view.bounds.width)
         thumbnailCollectionControllerWidth.constant = width
+        
+        NotificationCenter.default.post(name: NSNotification.Name.init("scrolledToPDFPage"), object: nil, userInfo: ["index" : 0])
     }
     
     public override func viewDidLayoutSubviews() {
@@ -286,6 +288,7 @@ extension PDFViewController: UIScrollViewDelegate {
             }
             currentPageIndex = updatedPageIndex
             thumbnailCollectionController?.currentPageIndex = currentPageIndex
+            NotificationCenter.default.post(name: NSNotification.Name.init("scrolledToPDFPage"), object: nil, userInfo: ["index" : currentPageIndex])
         }
     }
 }
